@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: conveyor
+      POSTGRES_USER: conveyor
+      POSTGRES_PASSWORD: conveyor
+    # defaults dodge the usual local ports (5432/5433 and 8080/8090 are taken
+    # by other projects on this machine) — override with DB_PORT / APP_PORT
+    ports:
+      - "${DB_PORT:-5434}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U conveyor -d conveyor"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8091}:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_URL: jdbc:postgresql://db:5432/conveyor
+      DB_USER: conveyor
+      DB_PASSWORD: conveyor
+      CONVEYOR_INBOX_ENABLED: "true"
+      CONVEYOR_INBOX_POLL_MS: "10000"
+    volumes:
+      - ./inbox:/app/inbox
+      - ./archive:/app/archive
+      - ./failed:/app/failed
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
