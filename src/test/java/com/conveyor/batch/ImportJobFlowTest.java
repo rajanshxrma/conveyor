@@ -29,6 +29,17 @@ class ImportJobFlowTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // two JobLauncher beans exist (Boot's sync one + the app's async one for
+    // REST), which makes JobLauncherTestUtils' optional autowiring skip the
+    // ambiguous injection — so we hand it the synchronous launcher explicitly
+    @Autowired
+    private org.springframework.batch.core.launch.JobLauncher jobLauncher;
+
+    @BeforeEach
+    void wireLauncher() {
+        jobLauncherTestUtils.setJobLauncher(jobLauncher);
+    }
+
     @BeforeEach
     void cleanTables() {
         jdbcTemplate.update("DELETE FROM throughput_records");
