@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: conveyor
+  datasource:
+    url: jdbc:h2:mem:conveyor;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  batch:
+    job:
+      # jobs run when asked (REST / inbox poller), never implicitly on boot
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+conveyor:
+  inbox:
+    enabled: false
+    directory: inbox
+    archive-directory: archive
+    failed-directory: failed
+    poll-ms: 30000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/conveyor}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:conveyor}
+    password: ${DB_PASSWORD:conveyor}

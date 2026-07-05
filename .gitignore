@@ -1,0 +1,16 @@
+target/
+*.class
+
+inbox/
+archive/
+failed/
+
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+.DS_Store
+*.log
