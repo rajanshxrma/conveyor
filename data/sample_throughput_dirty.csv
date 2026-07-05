@@ -1,0 +1,11 @@
+date,airport,checkpoint,hour,passengers
+2026-07-03,ATL,Main,6,420
+2026-07-03,ATL,Main,7,-50
+2026-07-03,atlanta,Main,8,300
+2026-07-03,JFK,Main,30,250
+not-a-date,JFK,T4,6,280
+2026-07-03,LAX,Main,6
+2026-07-03,LAX,Main,7,abc
+2026-07-03,JFK,T4,7,315
+2026-07-03,LAX,TBIT,6,340
+2026-07-03,ATL,North,6,228
